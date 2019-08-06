@@ -1,26 +1,61 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Header from "./components/Header";
+import InputForm from "./components/InputForm";
+import TodoItem from "./components/TodoItem";
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export interface ITodoItem {
+  id: number;
+  name: string;
+  isCompleted: boolean;
+}
+interface ITodoList extends Array<ITodoItem> {}
+
+export interface IAppState {
+  todos: ITodoList;
 }
 
-export default App;
+export default () => {
+  const [todos, setTodos] = useState<ITodoList>([
+    { name: "I want to fly", isCompleted: false, id: new Date().getTime() }
+  ]);
+
+  const addTodo = (name: string): void => {
+    const newTodos = [
+      ...todos,
+      { name, isCompleted: false, id: new Date().getTime() }
+    ];
+    setTodos(newTodos);
+  };
+
+  const toggleCompleted = (id: number): void => {
+    setTodos(
+      todos.map(todo =>
+        todo.id === id
+          ? {
+              ...todo,
+              isCompleted: !todo.isCompleted
+            }
+          : todo
+      )
+    );
+  };
+
+  const removeTodo = (id: number): void => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
+  return (
+    <>
+      <Header title="Todo App" subTitle="This is todo app using react hooks" />
+      <InputForm addTodo={addTodo} />
+      <br />
+      {todos.map(todo => (
+        <TodoItem
+          removeTodo={removeTodo}
+          toggleCompleted={toggleCompleted}
+          todo={todo}
+          key={todo.id}
+        />
+      ))}
+    </>
+  );
+};
