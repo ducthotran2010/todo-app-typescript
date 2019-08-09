@@ -1,61 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
+import { connect } from "react-redux";
+
 import Header from "./components/Header";
-import InputForm from "./components/InputForm";
-import TodoItem from "./components/TodoItem";
+import { InputForm, TodoItem } from "./components";
+import { ITodoItem } from "./store/types";
+import { AppState } from "./store/reducers";
 
-export interface ITodoItem {
-  id: number;
-  name: string;
-  isCompleted: boolean;
-}
-interface ITodoList extends Array<ITodoItem> {}
-
-export interface IAppState {
-  todos: ITodoList;
+interface IAppProps {
+  todos?: ITodoItem[];
 }
 
-export default () => {
-  const [todos, setTodos] = useState<ITodoList>([
-    { name: "I want to fly", isCompleted: false, id: new Date().getTime() }
-  ]);
-
-  const addTodo = (name: string): void => {
-    const newTodos = [
-      ...todos,
-      { name, isCompleted: false, id: new Date().getTime() }
-    ];
-    setTodos(newTodos);
-  };
-
-  const toggleCompleted = (id: number): void => {
-    setTodos(
-      todos.map(todo =>
-        todo.id === id
-          ? {
-              ...todo,
-              isCompleted: !todo.isCompleted
-            }
-          : todo
-      )
-    );
-  };
-
-  const removeTodo = (id: number): void => {
-    setTodos(todos.filter(todo => todo.id !== id));
-  };
+const App = ({ todos }: IAppProps) => {
   return (
     <>
       <Header title="Todo App" subTitle="This is todo app using react hooks" />
-      <InputForm addTodo={addTodo} />
+      <InputForm />
       <br />
-      {todos.map(todo => (
-        <TodoItem
-          removeTodo={removeTodo}
-          toggleCompleted={toggleCompleted}
-          todo={todo}
-          key={todo.id}
-        />
-      ))}
+      {todos && todos.map(todo => <TodoItem todo={todo} key={todo.id} />)}
     </>
   );
 };
+
+const mapStateToProps = (state: AppState): IAppProps => ({
+  todos: state.todos
+});
+
+export default connect(mapStateToProps)(App);

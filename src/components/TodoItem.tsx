@@ -1,5 +1,7 @@
 import React from "react";
-import { ITodoItem } from "../App";
+import { connect } from "react-redux";
+import { removeTodo, toggleTodo } from "../store/actions";
+import { ITodoItem } from "../store/types";
 
 interface ITodoItemProps {
   key: number;
@@ -41,4 +43,7 @@ const TodoItem = ({
   );
 };
 
-export default TodoItem;
+export default connect(
+  null,
+  { removeTodo, toggleCompleted: toggleTodo }
+)(TodoItem);

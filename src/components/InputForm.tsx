@@ -1,15 +1,18 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import { addTodo } from "../store/actions";
+import { ITodoItem, IAddTodoAction } from "../store/types";
 
 export interface IInputFormProps {
-  addTodo: (name: string) => void;
+  addTodo: (todo: ITodoItem) => IAddTodoAction;
 }
 
-export default ({ addTodo }: IInputFormProps) => {
+const InputForm = ({ addTodo }: IInputFormProps) => {
   const [value, setValue] = useState<string>("");
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    addTodo(value);
+    addTodo({ name: value, isCompleted: false, id: new Date().getTime() });
     setValue("");
   };
   return (
@@ -24,3 +27,8 @@ export default ({ addTodo }: IInputFormProps) => {
     </form>
   );
 };
+
+export default connect(
+  null,
+  { addTodo }
+)(InputForm);
