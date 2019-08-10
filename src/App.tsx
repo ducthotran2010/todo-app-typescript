@@ -13,7 +13,10 @@ interface IAppProps {
 const App = ({ todos }: IAppProps) => {
   return (
     <>
-      <Header title="Todo App" subTitle="This is todo app using react hooks" />
+      <Header
+        title="Todo App"
+        subTitle="This is todo app using typescript + react + hooks + redux"
+      />
       <InputForm />
       <br />
       {todos && todos.map(todo => <TodoItem todo={todo} key={todo.id} />)}
